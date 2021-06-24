@@ -81,7 +81,7 @@ namespace ToDoAppAgain.Data
                 .OnDelete(DeleteBehavior.ClientCascade);
 
 
-            // mapping the self-relating in the user class
+            //mapping the self-relating in the user class
             modelBuilder.Entity<User>()
              .HasOne(e => e.UserCreator)
              .WithMany()
