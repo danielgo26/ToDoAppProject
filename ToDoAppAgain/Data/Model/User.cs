@@ -44,10 +44,11 @@ namespace ToDoAppAgain.Data.Model
         public override string ToString()
         {
             return $"Id:{this.Id} - Name: {this.FirstName} {this.LastName} \n" +
-                $"Username:{this.Username}, Password:{this.Password} \n" +
+                $"Username:{this.Username}, Password:{new string('*',this.Password.Length)} \n" +
                 $"AdminRights: {this.IsAdmin} \n" +
                 $"Date of creating the user: {this.DateCreating} \n" +
-                $"Date of last change: {this.DateOfTheLastChange}";
+                $"Date of last change: {this.DateOfTheLastChange} \n"+
+                new string('-',30);
         }
 
     }

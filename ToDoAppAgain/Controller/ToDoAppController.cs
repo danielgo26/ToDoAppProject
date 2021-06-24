@@ -315,6 +315,11 @@ namespace ToDoAppAgain.Controller
                         {
                             task1.UserMadeLastChangeOfTheTaskId = task1.CreatorOfTheTaskId; // root admin
                         }
+                        if (item.Id == task1.UserAssignedToTheTaskId)
+                        {
+                            task1.UserAssignedToTheTaskId = null;
+                            task1.IsAssigned = false;
+                        }
                     }
                     // clear the user from the UsersToDoLists table
                     foreach (var userToDoList in toDoContext.UsersToDoLists)
@@ -324,6 +329,7 @@ namespace ToDoAppAgain.Controller
                             toDoContext.UsersToDoLists.Remove(userToDoList);
                         }
                     }
+
                     toDoContext.Users.Remove(item);
                     toDoContext.SaveChanges();
                 }
@@ -346,12 +352,19 @@ namespace ToDoAppAgain.Controller
                                 toDoContext.UsersToDoLists.Remove(userToDoList);
                             }
                         }
+                        foreach (var task in toDoContext.Tasks)
+                        {
+                            if (task.ListOfTaskId==toDoList.Id)
+                            {
+                                toDoContext.Tasks.Remove(task);
+                            }
+                        }
                         toDoContext.ToDoLists.Remove(toDoList);
                     }
 
                     else
                     {
-                        foreach (var userToDoList in toDoContext.UsersToDoLists) // current user != creator of th list
+                        foreach (var userToDoList in toDoContext.UsersToDoLists) // current user != creator of the list
                         {
                             if (userToDoList.ToDoListId == toDoList.Id && userToDoList.UserId == currentUser.Id)
                             {
@@ -375,8 +388,7 @@ namespace ToDoAppAgain.Controller
                     foreach (var utdl in toDoContext.UsersToDoLists)
                     {
                         if (u.Id == utdl.UserId && toDoListToBeShared.Id == utdl.ToDoListId)
-                        {
-                            Console.WriteLine($"{u.Username} is already shared to this To Do List!");
+                        {                
                             canBeShared = false;
                             break;
                         }

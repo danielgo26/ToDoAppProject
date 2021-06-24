@@ -18,6 +18,7 @@ namespace ToDoAppAgain.Data.Model
             UserMadeLastChangeOfTheListId = userMadeLastChangeOfTheListId;
             DateCreating = DateTime.Now;
             DateLastChange = DateTime.Now;
+            this.TasksOfTheList = new List<Task>();
         }
 
         public int Id { get; set; }
@@ -35,7 +36,8 @@ namespace ToDoAppAgain.Data.Model
         {
             return $"Title: {this.Title} \n" +
                 $"Date of the creting: {this.DateCreating} \n" +
-                $"Date of the last change: {this.DateLastChange}"; 
+                $"Date of the last change: {this.DateLastChange} \n"+
+                new string('-',30); 
         }
     }
 }

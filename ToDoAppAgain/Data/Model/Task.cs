@@ -42,10 +42,11 @@ namespace ToDoAppAgain.Data.Model
         public override string ToString()
         {
             return $"Title: {this.Title} \n" +
-                $"Description {this.Description}\n" +
+                $"Description: {this.Description}\n" +
                 $"Is Completed -> {this.IsCompleted}\n" +
                 $"Date of the creting: {this.DateCreating}\n" +
-                $"Date of the last change: {this.DateLastChange}";
+                $"Date of the last change: {this.DateLastChange} \n"+
+                new string('-',30);
         }
     }
 }

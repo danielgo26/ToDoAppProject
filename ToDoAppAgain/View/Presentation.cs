@@ -16,7 +16,6 @@ namespace ToDoAppAgain.View
         List<Task> unassignedTasks = new List<Task>();
         List<Task> assignedTasksofTheUser = new List<Task>();
         List<User> usersThatCanBeAssiged = new List<User>();
-        //string management = "";
         /// <summary>
         /// maintains the flow of the program
         /// </summary>
@@ -26,7 +25,7 @@ namespace ToDoAppAgain.View
             Connector();
             while (true)
             {
-                Console.WriteLine("Do you want to exit the program? (yes\\no)");
+                Console.WriteLine("Do you want to exit the program? (yes\\no):");
                 string answer = Console.ReadLine().ToLower();
                 Console.Clear();
                 if (answer == "yes")
@@ -35,7 +34,9 @@ namespace ToDoAppAgain.View
                 }
                 else if (answer != "no")
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Incorrect input!");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
@@ -57,10 +58,14 @@ namespace ToDoAppAgain.View
                 currentUser = toDoAppController.GetUser(inputUsername, inputPass);
                 if (currentUser != null)
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Welcome {currentUser.Username}!");
+                    Console.ForegroundColor = ConsoleColor.White;
                     return;
                 }
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Wrong username or password. Try again!");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
@@ -82,7 +87,9 @@ namespace ToDoAppAgain.View
                         UserManagementLogic();
                         break;
                     }
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("You do not have permission to user management!");
+                    Console.ForegroundColor = ConsoleColor.White;
                     Connector();
                     break;
                 case 2:
@@ -92,12 +99,13 @@ namespace ToDoAppAgain.View
                     if (CheckIfCurrentUserHaveLists())
                     {
                         ChooseToDoList();
-
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("You do not have To Do Lists!");
                         Console.WriteLine("First create a To Do List!");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     break;
                 case 4:
@@ -107,19 +115,23 @@ namespace ToDoAppAgain.View
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("You do not have assigned tasks!");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     break;
                 case 0:
                     return;
                 default:
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Incorrect input!");
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
             }
             Connector();
         }
 
-        
+
 
         private void UserManagementLogic()
         {
@@ -148,7 +160,9 @@ namespace ToDoAppAgain.View
                 case 0:
                     return;
                 default:
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Incorrect input!");
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
             }
             UserManagementLogic();
@@ -158,482 +172,645 @@ namespace ToDoAppAgain.View
         {
             Console.Write("Search user by username: ");
             string searchedUsername = Console.ReadLine();
-            //User searchedUser = toDoAppController.GetUser(searchedUsername);
-            //if (searchedUser == null)
-            //{
-                //Console.WriteLine("There isn't a user with this username!");
-                //DeleteUser();
-            //}
-            //else
-            //{
-                toDoAppController.DeleteUser(searchedUsername);
-            //}
-        }
-
-        private void EditUser()
-        {
-            Console.Write("Search user by username: ");
-            string searchedUsername = Console.ReadLine();
-            User searchedUser = toDoAppController.GetUser(searchedUsername);
-            if (searchedUser == null)
-            {
-                Console.WriteLine("There isn't a user with this username!");
-                EditUser();
-            }
-            else
-            {
-                Console.Write("New username: ");
-                string newUsername = Console.ReadLine();
-                Console.Write("New password: ");
-                string newPassword = Console.ReadLine();
-                Console.Write("New full name: ");
-                string newName = Console.ReadLine();
-                toDoAppController
-                    .UpdateUser(searchedUser, newUsername, newPassword,
-                    newName.Split(' ')[0], newName.Split(' ')[1], currentUser.Id);
-            }
-        }
-
-        private void CreateNewUser()
-        {
-            Console.Write("Insert Username:");
-            string userName = Console.ReadLine();
-            Console.Write("Insert Password:");
-            string password = Console.ReadLine();
-            Console.Write("Insert full name: ");
-            string names = Console.ReadLine();
-            Console.Write("Insert administrator rights (yes\\no)!");
-            string isAdminInput = Console.ReadLine();
-            bool isAdmin = false;
-            if (isAdminInput == "yes")
-            {
-                isAdmin = true;
-            }
-            User newUser = new User(userName, password, names.Split(' ')[0], names.Split(' ')[1], isAdmin);
-            newUser.UserCreatorId = currentUser.Id;
-            newUser.UserMadeLastChangeId = currentUser.Id;
-            toDoAppController.Add(newUser);
-        }
-
-        private void ListAllUsers()
-        {
-            List<User> users = toDoAppController.GetAllUsers();
-            foreach (var user in users)
-            {
-                Console.WriteLine(user.ToString());
-            }
-        }
-
-        public void ToDoListManagement()
-        {
-            Console.WriteLine("Press 1 to list your To Do lists!");
-            Console.WriteLine("Press 2 to create a new To Do List!");
-            Console.WriteLine("Press 3 to edit To Do List by title!");
-            Console.WriteLine("Press 4 to delete To Do List by title!");
-            Console.WriteLine("Press 5 to share a To Do list with other users!");
-            Console.WriteLine("Press 0 to exit!");
-            Console.Write("Insert command:");
-            int inputCommand = int.Parse(Console.ReadLine());
             Console.Clear();
-            switch (inputCommand)
+            if (searchedUsername == "admin")
             {
-                case 1:
-                    ListAllToDoListsOfTheCurrentUser();
-                    break;
-                case 2:
-                    CreateNewToDoList();
-                    break;
-                case 3:
-                    EditToDoList();
-                    break;
-                case 4:
-                    DeleteToDoList();
-                    break;
-                case 5:
-                    ShareToDoList();
-                    break;
-                case 0:
-                    return;
-                default:
-                    Console.WriteLine("Incorrect input!");
-                    break;
-            }
-            ToDoListManagement();
-        }
-
-        private void ShareToDoList()
-        {
-            Console.WriteLine("To Do Lists:");
-            ListAllToDoListsOfTheCurrentUser();
-            Console.Write("Choose To Do List: ");
-            string titleOfToDoListToBeShared = Console.ReadLine();
-            ToDoList toDoListToBeShared = toDoAppController.GetToDoList(titleOfToDoListToBeShared);
-            if (toDoListToBeShared == null)
-            {
-                Console.WriteLine("Incorrect title!");
-                ShareToDoList();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You cannot delete admin!");
+                Console.ForegroundColor = ConsoleColor.White;
                 return;
             }
-            Console.Write("Choose users by username to share To Do List: ");
-            string[] searchedUsernames = Console.ReadLine().Split(", ");
-            List<User> searchedUsers = new List<User>();
-            foreach (var username in searchedUsernames)
+            else
             {
-                User tempUser = toDoAppController.GetUser(username);
-                if (tempUser == null)
+
+                if (toDoAppController.GetUser(searchedUsername) == null)
                 {
-                    Console.WriteLine($"There isn't a user with this[{username}] username!");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"There isn't a user with username {searchedUsername}!");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
-                    searchedUsers.Add(tempUser);
+                    if (searchedUsername == currentUser.Username)
+                    {
+                        Console.WriteLine($"Bye {searchedUsername}!");
+                        System.Threading.Thread.Sleep(1000);
+                        toDoAppController.DeleteUser(searchedUsername);
+                        Console.Clear();
+                        Engine();
+                    }
+                    else
+                    {
+                        toDoAppController.DeleteUser(searchedUsername);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Successfully deleted!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
                 }
             }
-            toDoAppController.ShareToDoList(searchedUsers, toDoListToBeShared);
         }
-
-        private void DeleteToDoList()
-        {
-            Console.Write("Search To Do List by title: ");
-            string searchedTitle2 = Console.ReadLine();
-            //ToDoList searchedToDoList2 = toDoAppController.GetToDoList(searchedTitle2);
-            //if (searchedToDoList2 == null)
-            //{
-            //    Console.WriteLine("There isn't a ToDoList with this username!");
-            //    DeleteToDoList();
-            //}
-            //else
-            //{
-            //    
-            //}
-            toDoAppController.DeleteToDoList(searchedTitle2, currentUser);
-            Console.WriteLine("Successfully deleted!");
-        }
-
-        private void EditToDoList()
-        {
-            Console.Write("Search To Do List by title: ");
-            string searchedTitle = Console.ReadLine();
-            ToDoList searchedToDoList = toDoAppController.GetToDoList(searchedTitle);
-            if (searchedToDoList == null)
+            private void EditUser()
             {
-                Console.WriteLine("There isn't a ToDoList with this username!");
-                EditToDoList();
+                Console.Write("Search user by username: ");
+                string searchedUsername = Console.ReadLine();
+                Console.Clear();
+                if (searchedUsername == "admin")
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("You cannot edit admin!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    return;
+                }
+                else
+                {
+                    User searchedUser = toDoAppController.GetUser(searchedUsername);
+                    if (searchedUser == null)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("There isn't a user with this username!");
+                        EditUser();
+                    }
+                    else
+                    {
+                        Console.Write("New username: ");
+                        string newUsername = Console.ReadLine();
+                        Console.Write("New password: ");
+                        string newPassword = Console.ReadLine();
+                        Console.Write("New full name: ");
+                        string newName = Console.ReadLine();
+                        toDoAppController
+                            .UpdateUser(searchedUser, newUsername, newPassword,
+                            newName.Split(' ')[0], newName.Split(' ')[1], currentUser.Id);
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Successfully editted!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                }
             }
-            else
+
+            private void CreateNewUser()
             {
-                Console.Write("New title: ");
-                string newTitle = Console.ReadLine();
-                toDoAppController.UpdateToDoList(searchedToDoList, newTitle, currentUser.Id);
+                string userName;
+                while (true)
+                {
+                    Console.Write("Insert Username:");
+                    userName = Console.ReadLine();
+                    if (toDoAppController.GetUser(userName) != null)
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"There is already user with username {userName}!");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                Console.Write("Insert Password:");
+                string password = Console.ReadLine();
+                Console.Write("Insert full name: ");
+                string names = Console.ReadLine();
+                Console.Write("Insert administrator rights (yes\\no):");
+                string isAdminInput = Console.ReadLine();
+                bool isAdmin = false;
+                if (isAdminInput == "yes")
+                {
+                    isAdmin = true;
+                }
+                User newUser = new User(userName, password, names.Split(' ')[0], names.Split(' ')[1], isAdmin);
+                newUser.UserCreatorId = currentUser.Id;
+                newUser.UserMadeLastChangeId = currentUser.Id;
+                toDoAppController.Add(newUser);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Clear();
+                Console.WriteLine("Sucessfully created!");
+                Console.ForegroundColor = ConsoleColor.White;
             }
-        }
 
-        private void CreateNewToDoList()
-        {
-            Console.Write("Insert title: ");
-            string title = Console.ReadLine();
-            ToDoList newtoDoList = new ToDoList(title, currentUser.Id, currentUser.Id);
-            toDoAppController.Add(newtoDoList);
-            // !!! - not sure if this works
-            UserToDoList userToDoList = new UserToDoList(currentUser.Id, newtoDoList.Id);
-            toDoAppController.Add(userToDoList);
-        }
-
-
-        private void ListAllToDoListsOfTheCurrentUser()
-        {
-            List<ToDoList> yourToDoList = toDoAppController.GetAllToDoListsOfTheUser(currentUser.Id);
-            //if (yourToDoList.Count == 0)
-            //{
-            //    Console.WriteLine("You do not have To Do Lists!");
-            //    Console.WriteLine("First create a To Do List!");
-            //    return;
-            //}
-            for (int i = 0; i < yourToDoList.Count; i++)
+            private void ListAllUsers()
             {
-                Console.WriteLine($"{i + 1} -> {yourToDoList[i]}");
+                List<User> users = toDoAppController.GetAllUsers();
+                foreach (var user in users)
+                {
+                    Console.WriteLine(user.ToString());
+                }
             }
-        }
-        private bool CheckIfCurrentUserHaveLists()
-        {
-            List<ToDoList> yourToDoList = toDoAppController.GetAllToDoListsOfTheUser(currentUser.Id);
-            return !(yourToDoList.Count == 0);
-        }
 
-        private void ChooseToDoList()
-        {
-            while (true)
+            public void ToDoListManagement()
             {
+                Console.WriteLine("Press 1 to list your To Do lists!");
+                Console.WriteLine("Press 2 to create a new To Do List!");
+                Console.WriteLine("Press 3 to edit To Do List by title!");
+                Console.WriteLine("Press 4 to delete To Do List by title!");
+                Console.WriteLine("Press 5 to share a To Do list with other users!");
+                Console.WriteLine("Press 0 to exit!");
+                Console.Write("Insert command:");
+                int inputCommand = int.Parse(Console.ReadLine());
+                Console.Clear();
+                switch (inputCommand)
+                {
+                    case 1:
+                        if (CheckIfCurrentUserHaveLists())
+                        {
+                            ListAllToDoListsOfTheCurrentUser();
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("You do not have To Do Lists!");
+                            Console.ForegroundColor = ConsoleColor.White;
+
+                        }
+                        break;
+                    case 2:
+                        CreateNewToDoList();
+                        break;
+                    case 3:
+                        EditToDoList();
+                        break;
+                    case 4:
+                        DeleteToDoList();
+                        break;
+                    case 5:
+                        ShareToDoList();
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Incorrect input!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                }
+                ToDoListManagement();
+            }
+
+            private void ShareToDoList()
+            {
+                Console.WriteLine("To Do Lists:");
                 ListAllToDoListsOfTheCurrentUser();
                 Console.Write("Choose To Do List: ");
-                string titleOftheChosenList = Console.ReadLine();
-                chosenToDoList = toDoAppController.GetToDoList(titleOftheChosenList);
-                Console.Clear();
-                if (chosenToDoList == null)
-                {
-                    Console.WriteLine("Incorrect To Do List!");
+                string titleOfToDoListToBeShared = Console.ReadLine();
 
-                }
-                else
+                ToDoList toDoListToBeShared = toDoAppController.GetToDoList(titleOfToDoListToBeShared);
+                Console.Clear();
+                if (toDoListToBeShared == null)
                 {
-                    Console.WriteLine("Successfully entered!");
-                    break;
-                }
-            }
-            TaskManagement();
-        }
-        private void TaskManagement()
-        {
-            Console.WriteLine("Press 1 to list the tasks in this List!");
-            Console.WriteLine("Press 2 to create a new Task in the List!");
-            Console.WriteLine("Press 3 to edit a task in the List!");
-            Console.WriteLine("Press 4 to delete a task in the List by title!");
-            Console.WriteLine("Press 5 to assign a task to other users!"); // TODO
-            Console.WriteLine("Press 0 to exit!");
-            Console.Write("Insert command:");
-            int inputCommand = int.Parse(Console.ReadLine());
-            Console.Clear();
-            switch (inputCommand)
-            {
-                case 1:
-                    if (CheckIfChosenToDoListHaveTasks())
-                    {
-                        ListAllTasksOfTheToDoList(chosenToDoList.Id);
-                    }
-                    else
-                    {
-                        Console.WriteLine("You do not have Tasks in this list!");
-                        Console.WriteLine("First create a Task!");
-                    }
-                    break;
-                case 2:
-                    CreateNewTask();
-                    break;
-                case 3:
-                    EditTask();
-                    break;
-                case 4:
-                    DeleteTask();
-                    break;
-                case 5:
-                    if (CheckIfThereAreUnassignedTasksInTheList())
-                    {
-                        AssignTask();
-                    }
-                    else
-                    {
-                        Console.WriteLine("You do not have unassigned Tasks in this list!");
-                        Console.WriteLine("First create new Task!");
-                    }
-                    break;
-                case 0:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Incorrect title!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    ShareToDoList();
                     return;
-                default:
-                    break;
-            }
-            TaskManagement();
-        }
-
-        private void CompleteTask()
-        {
-            ListAllAssignedTasksOfTheUser();
-            Console.Write("Search task by title: ");
-            string searchedTitle = Console.ReadLine();
-            Task searchedTask = GetAssignedtaskByTitle(searchedTitle);
-            Console.Clear();
-            if (searchedTask == null)
-            {
-                Console.WriteLine("There isn't a task with this title!");
-                CompleteTask();
-            }
-            else
-            {
-                if (!searchedTask.IsCompleted)
-                {
-
-                    toDoAppController.CompleteTask(searchedTask, currentUser.Id);
-                    Console.WriteLine("Successfully completed!");
                 }
-                else
+                Console.Write("Choose users by username to share To Do List: ");
+                string[] searchedUsernames = Console.ReadLine().Split(", ");
+                List<User> searchedUsers = new List<User>();
+                foreach (var username in searchedUsernames)
                 {
-                    Console.WriteLine("You have already completed this task!");
+                    User tempUser = toDoAppController.GetUser(username);
+                    Console.Clear();
+                    if (tempUser == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"There isn't a user with username {username}!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        searchedUsers.Add(tempUser);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Successfully shared!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
                 }
-            }
-        }
-
-        private void ListAllTasksOfTheToDoList(int toDoListId)
-        {
-            List<Task> yourTasks = toDoAppController.GetAllTasksOfTheToDoList(toDoListId);
-            //if (yourTasks.Count == 0)
-            //{
-            //    Console.WriteLine("You do not have Tasks in this list!");
-            //    Console.WriteLine("First create a Task!");
-            //    return;
-            //}
-            for (int i = 0; i < yourTasks.Count; i++)
-            {
-                Console.WriteLine($"{i + 1} -> {yourTasks[i]}");
-            }
-        }
-
-        private void ListAllUnAssignedTasksOfTheToDoList(int toDoListId)
-        {
-            unassignedTasks = toDoAppController.GetAllUnAssignedTasksOfTheToDoList(toDoListId);
-            for (int i = 0; i < unassignedTasks.Count; i++)
-            {
-                
-                Console.WriteLine($"{i + 1} -> {unassignedTasks[i]}");
-            }
-        }
-
-        private void ListAllAssignedTasksOfTheUser()
-        {
-            assignedTasksofTheUser = toDoAppController.GetAllAssignedTasksOfTheUser(currentUser.Id);
-            for (int i = 0; i < assignedTasksofTheUser.Count; i++)
-            {
-
-                Console.WriteLine($"{i + 1} -> {assignedTasksofTheUser[i]}");
-            }
-        }
-
-
-
-        private bool CheckIfChosenToDoListHaveTasks()
-        {
-            List<Task> yourTasks = toDoAppController.GetAllTasksOfTheToDoList(chosenToDoList.Id);
-            return !(yourTasks.Count == 0);
-        }
-
-        private bool CheckIfThereAreUnassignedTasksInTheList()
-        {
-            unassignedTasks = toDoAppController.GetAllUnAssignedTasksOfTheToDoList(chosenToDoList.Id);
-            return !(unassignedTasks.Count == 0);
-        }
-        private bool CheckIfTheUserHaveAssignedTasks()
-        {
-            assignedTasksofTheUser = toDoAppController.GetAllAssignedTasksOfTheUser(currentUser.Id);
-            return !(assignedTasksofTheUser.Count == 0);
-        }
-
-        private void CreateNewTask()
-        {
-            Console.Write("Insert title: ");
-            string title = Console.ReadLine();
-            Console.Write("Insert description: ");
-            string description = Console.ReadLine();
-            Task newTask = new Task(title, description, chosenToDoList.Id, currentUser.Id, currentUser.Id);
-            toDoAppController.Add(newTask);
-            // !!! - not sure if this works
-            //UserToDoList userToDoList = new UserToDoList(currentUser.Id, newtoDoList.Id);
-            //toDoAppController.Add(userToDoList);
-        }
-
-        private void EditTask()
-        {
-            Console.Write("Search task by title: ");
-            string searchedTitle = Console.ReadLine();
-            Task searchedTask = toDoAppController.GetTask(searchedTitle);
-            if (searchedTask == null)
-            {
-                Console.WriteLine("There isn't a task with this title!");
-                EditTask();
-            }
-            else
-            {
-                Console.Write("New title: ");
-                string newTitle = Console.ReadLine();
-                Console.Write("New description: ");
-                string description = Console.ReadLine();
-                //Console.Write("Whether the task is completed: (yes\\no): ");
-                //string isCompletedInfo = Console.ReadLine();
-                //bool isCompleted = false;
-                //if (isCompletedInfo == "yes")
+                //List<ToDoList> sharedListOfTheUser = toDoAppController.GetAllToDoListsOfTheUser(currentUser.Id);
+                //foreach (var tdl in sharedListOfTheUser)
                 //{
-                    //isCompleted = true;
+                //    if (tdl.Title==toDoListToBeShared.Title)
+                //    {
+                //        Console.ForegroundColor = ConsoleColor.Red;
+                //        Console.WriteLine("This To Do List is already shared to this user!");
+                //        Console.ForegroundColor = ConsoleColor.White;
+                //    }
                 //}
-                toDoAppController.UpdateTask(searchedTask, newTitle, description, currentUser.Id);
+                toDoAppController.ShareToDoList(searchedUsers, toDoListToBeShared);
             }
-        }
 
-        private void DeleteTask()
-        {
-            Console.Write("Search task by title: ");
-            string searchedTitle2 = Console.ReadLine();
-            //ToDoList searchedToDoList2 = toDoAppController.GetToDoList(searchedTitle2);
-            //if (searchedToDoList2 == null)
-            //{
-            //    Console.WriteLine("There isn't a ToDoList with this username!");
-            //    DeleteToDoList();
-            //}
-            //else
-            //{
-            //    
-            //}
-            toDoAppController.DeleteTask(searchedTitle2);
-            Console.WriteLine("Successfully deleted!");
-        }
-
-        private void AssignTask()
-        {
-            Task toBeAssigned;
-            while (true)
+            private void DeleteToDoList()
             {
-                ListAllUnAssignedTasksOfTheToDoList(chosenToDoList.Id);
-                Console.Write("Choose a task by title: ");
-                string taskTitle = Console.ReadLine();
-                toBeAssigned = GetUnassignedtaskByTitle(taskTitle);
+                Console.Write("Search To Do List by title: ");
+                string searchedTitle2 = Console.ReadLine();
                 Console.Clear();
-                if (toBeAssigned == null)
+                if (toDoAppController.GetToDoList(searchedTitle2) == null)
                 {
-                    Console.WriteLine("Incorrect task!");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"There isn't a To Do List with title {searchedTitle2}!");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
-                    break;
+                    toDoAppController.DeleteToDoList(searchedTitle2, currentUser);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Successfully deleted!");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-            usersThatCanBeAssiged = toDoAppController.GetAllUsersOfTheToDoList(chosenToDoList.Id);
-            
-            User userToBeAssigned;
-            while (true)
+
+            private void EditToDoList()
             {
-                foreach (var u in usersThatCanBeAssiged)
-                {
-                    Console.WriteLine(u.ToString());
-                }
-                Console.Write("Choose a user by username: ");
-                string username = Console.ReadLine();
-                userToBeAssigned = GetUserFromUsersThatCanBeAssigned(username);
+                Console.Write("Search To Do List by title: ");
+                string searchedTitle = Console.ReadLine();
+                ToDoList searchedToDoList = toDoAppController.GetToDoList(searchedTitle);
                 Console.Clear();
-                if (userToBeAssigned == null)
+                if (searchedToDoList == null)
                 {
-                    Console.WriteLine("Incorrect user!");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("There isn't a ToDoList with this title!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    EditToDoList();
                 }
                 else
                 {
-                    toDoAppController.AssignTaskToUser(userToBeAssigned.Id, toBeAssigned.Id);
-                    Console.WriteLine($"Successfully assigned {toBeAssigned.Title} to {username}!");
-                    break;
+                    Console.Write("New title: ");
+                    string newTitle = Console.ReadLine();
+                    Console.Clear();
+                    if (toDoAppController.GetToDoList(newTitle) != null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is already a To Do List with this title!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        toDoAppController.UpdateToDoList(searchedToDoList, newTitle, currentUser.Id);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Successfully edited!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
                 }
             }
-            
-        }
 
-        private Task GetUnassignedtaskByTitle(string taskTitle)
-        {
-            return unassignedTasks
-                .Where(t => t.Title == taskTitle).FirstOrDefault();
-        }
-        private Task GetAssignedtaskByTitle(string taskTitle)
-        {
-            return assignedTasksofTheUser
-                .Where(t => t.Title == taskTitle).FirstOrDefault();
-        }
+            private void CreateNewToDoList()
+            {
+                Console.Write("Insert title: ");
+                string title = Console.ReadLine();
+                Console.Clear();
+                if (toDoAppController.GetToDoList(title) != null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("There is already a To Do List with that name!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    ToDoList newtoDoList = new ToDoList(title, currentUser.Id, currentUser.Id);
+                    toDoAppController.Add(newtoDoList);
+                    UserToDoList userToDoList = new UserToDoList(currentUser.Id, newtoDoList.Id);
+                    toDoAppController.Add(userToDoList);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Successfully created!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
 
-        private User GetUserFromUsersThatCanBeAssigned(string username)
-        {
-            return usersThatCanBeAssiged.Where(u => u.Username == username).FirstOrDefault();
-        }
+            private void ListAllToDoListsOfTheCurrentUser()
+            {
+                List<ToDoList> yourToDoList = toDoAppController.GetAllToDoListsOfTheUser(currentUser.Id);
+                for (int i = 0; i < yourToDoList.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1} -> {yourToDoList[i]}");
+                }
+            }
+            private bool CheckIfCurrentUserHaveLists()
+            {
+                List<ToDoList> yourToDoList = toDoAppController.GetAllToDoListsOfTheUser(currentUser.Id);
+                return !(yourToDoList.Count == 0);
+            }
 
+            private void ChooseToDoList()
+            {
+                while (true)
+                {
+                    ListAllToDoListsOfTheCurrentUser();
+                    Console.Write("Choose To Do List: ");
+                    string titleOftheChosenList = Console.ReadLine();
+                    chosenToDoList = toDoAppController.GetToDoList(titleOftheChosenList);
+                    Console.Clear();
+                    if (chosenToDoList == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Incorrect To Do List!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Successfully entered!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                    }
+                }
+                TaskManagement();
+            }
+            private void TaskManagement()
+            {
+                Console.WriteLine("Press 1 to list the tasks in this List!");
+                Console.WriteLine("Press 2 to create a new Task in the List!");
+                Console.WriteLine("Press 3 to edit a task in the List!");
+                Console.WriteLine("Press 4 to delete a task in the List by title!");
+                Console.WriteLine("Press 5 to assign a task to other users!");
+                Console.WriteLine("Press 0 to exit!");
+                Console.Write("Insert command:");
+                int inputCommand = int.Parse(Console.ReadLine());
+                Console.Clear();
+                switch (inputCommand)
+                {
+                    case 1:
+                        if (CheckIfChosenToDoListHaveTasks())
+                        {
+                            ListAllTasksOfTheToDoList(chosenToDoList.Id);
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("You do not have Tasks in this list!");
+                            Console.WriteLine("First create a Task!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        break;
+                    case 2:
+                        CreateNewTask();
+                        break;
+                    case 3:
+                        EditTask();
+                        break;
+                    case 4:
+                        DeleteTask();
+                        break;
+                    case 5:
+                        if (CheckIfThereAreUnassignedTasksInTheList())
+                        {
+                            AssignTask();
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("You do not have unassigned Tasks in this list!");
+                            Console.WriteLine("First create new Task!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        break;
+                }
+                TaskManagement();
+            }
+
+            private void CompleteTask()
+            {
+                ListAllAssignedTasksOfTheUser();
+                Console.Write("Search task by title: ");
+                string searchedTitle = Console.ReadLine();
+                Task searchedTask = GetAssignedtaskByTitle(searchedTitle);
+                Console.Clear();
+                if (searchedTask == null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("There isn't a task with this title!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    CompleteTask();
+                }
+                else
+                {
+                    if (!searchedTask.IsCompleted)
+                    {
+
+                        toDoAppController.CompleteTask(searchedTask, currentUser.Id);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Successfully completed!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("You have already completed this task!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                }
+            }
+
+            private void ListAllTasksOfTheToDoList(int toDoListId)
+            {
+                List<Task> yourTasks = toDoAppController.GetAllTasksOfTheToDoList(toDoListId);
+                for (int i = 0; i < yourTasks.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1} -> {yourTasks[i]}");
+                }
+            }
+
+            private void ListAllUnAssignedTasksOfTheToDoList(int toDoListId)
+            {
+                unassignedTasks = toDoAppController.GetAllUnAssignedTasksOfTheToDoList(toDoListId);
+                for (int i = 0; i < unassignedTasks.Count; i++)
+                {
+
+                    Console.WriteLine($"{i + 1} -> {unassignedTasks[i]}");
+                }
+            }
+
+            private void ListAllAssignedTasksOfTheUser()
+            {
+                assignedTasksofTheUser = toDoAppController.GetAllAssignedTasksOfTheUser(currentUser.Id);
+                for (int i = 0; i < assignedTasksofTheUser.Count; i++)
+                {
+
+                    Console.WriteLine($"{i + 1} -> {assignedTasksofTheUser[i]}");
+                }
+            }
+
+            private bool CheckIfChosenToDoListHaveTasks()
+            {
+                List<Task> yourTasks = toDoAppController.GetAllTasksOfTheToDoList(chosenToDoList.Id);
+                return !(yourTasks.Count == 0);
+            }
+
+            private bool CheckIfThereAreUnassignedTasksInTheList()
+            {
+                unassignedTasks = toDoAppController.GetAllUnAssignedTasksOfTheToDoList(chosenToDoList.Id);
+                return !(unassignedTasks.Count == 0);
+            }
+            private bool CheckIfTheUserHaveAssignedTasks()
+            {
+                assignedTasksofTheUser = toDoAppController.GetAllAssignedTasksOfTheUser(currentUser.Id);
+                return !(assignedTasksofTheUser.Count == 0);
+            }
+
+            private void CreateNewTask()
+            {
+                Console.Write("Insert title: ");
+                string title = Console.ReadLine();
+
+                if (GetTaskFromCurrentList(title) != null)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"There is already a task with title {title}!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    return;
+                }
+                else
+                {
+                    Console.Write("Insert description: ");
+                    string description = Console.ReadLine();
+                    Task newTask = new Task(title, description, chosenToDoList.Id, currentUser.Id, currentUser.Id);
+                    toDoAppController.Add(newTask);
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Successfully created!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+
+            private void EditTask()
+            {
+                Console.Write("Search task by title: ");
+                string searchedTitle = Console.ReadLine();
+                Task searchedTask = toDoAppController.GetTask(searchedTitle);
+                Console.Clear();
+                if (searchedTask == null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"There isn't a task with title {searchedTitle}!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    EditTask();
+                }
+                else
+                {
+                    Console.Write("New title: ");
+                    string newTitle = Console.ReadLine();
+                    if (GetTaskFromCurrentList(newTitle) != null)
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"There is already a task with title {newTitle}!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        Console.Write("New description: ");
+                        string description = Console.ReadLine();
+                        toDoAppController.UpdateTask(searchedTask, newTitle, description, currentUser.Id);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Clear();
+                        Console.WriteLine("Successfully edited!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                }
+            }
+
+            private void DeleteTask()
+            {
+                Console.Write("Search task by title: ");
+                string searchedTitle2 = Console.ReadLine();
+                if (GetTaskFromCurrentList(searchedTitle2) == null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"There isn't a task with title {searchedTitle2}!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    return;
+                }
+                else
+                {
+                    toDoAppController.DeleteTask(searchedTitle2);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Clear();
+                    Console.WriteLine("Successfully deleted!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+
+            private void AssignTask()
+            {
+                Task toBeAssigned;
+                while (true)
+                {
+                    ListAllUnAssignedTasksOfTheToDoList(chosenToDoList.Id);
+                    Console.Write("Choose a task by title: ");
+                    string taskTitle = Console.ReadLine();
+                    toBeAssigned = GetUnassignedtaskByTitle(taskTitle);
+                    Console.Clear();
+                    if (toBeAssigned == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Incorrect task!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                usersThatCanBeAssiged = toDoAppController.GetAllUsersOfTheToDoList(chosenToDoList.Id);
+
+                User userToBeAssigned;
+                while (true)
+                {
+                    foreach (var u in usersThatCanBeAssiged)
+                    {
+                        Console.WriteLine(u.ToString());
+                    }
+                    Console.Write("Choose a user by username: ");
+                    string username = Console.ReadLine();
+                    userToBeAssigned = GetUserFromUsersThatCanBeAssigned(username);
+                    Console.Clear();
+                    if (userToBeAssigned == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Incorrect user!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        toDoAppController.AssignTaskToUser(userToBeAssigned.Id, toBeAssigned.Id);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"Successfully assigned {toBeAssigned.Title} to {username}!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                    }
+                }
+
+            }
+
+            private Task GetUnassignedtaskByTitle(string taskTitle)
+            {
+                return unassignedTasks
+                    .Where(t => t.Title == taskTitle).FirstOrDefault();
+            }
+            private Task GetAssignedtaskByTitle(string taskTitle)
+            {
+                return assignedTasksofTheUser
+                    .Where(t => t.Title == taskTitle).FirstOrDefault();
+            }
+
+            private User GetUserFromUsersThatCanBeAssigned(string username)
+            {
+                return usersThatCanBeAssiged.Where(u => u.Username == username).FirstOrDefault();
+            }
+
+            private Task GetTaskFromCurrentList(string title)
+            {
+                // return chosenToDoList.TasksOfTheList.Where(t => t.Title == title).FirstOrDefault();
+                foreach (var task in toDoAppController.GetAllTasksOfTheToDoList(chosenToDoList.Id))
+                {
+                    if (task.Title == title)
+                    {
+                        return task;
+                    }
+                }
+                return null;
+            }
+
+        }
     }
-}
