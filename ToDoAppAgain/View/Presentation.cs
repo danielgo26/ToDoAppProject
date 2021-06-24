@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-// System.Threading.Tasks;
 using ToDoAppAgain.Controller;
 using ToDoAppAgain.Data.Model;
 
@@ -227,7 +226,9 @@ namespace ToDoAppAgain.View
                     if (searchedUser == null)
                     {
                         Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There isn't a user with this username!");
+                    Console.ForegroundColor = ConsoleColor.White;
                         EditUser();
                     }
                     else
@@ -704,6 +705,7 @@ namespace ToDoAppAgain.View
                         toDoAppController.UpdateTask(searchedTask, newTitle, description, currentUser.Id);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Successfully edited!");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
@@ -726,6 +728,7 @@ namespace ToDoAppAgain.View
                     toDoAppController.DeleteTask(searchedTitle2);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Successfully deleted!");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
